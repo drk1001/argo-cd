@@ -86,6 +86,41 @@ spec:
       include: 'some-directory/*'
 ```
 
+To include a certain file format like only projects, applications and applicationset given the folowing directory structure:
+
+```
+config.json
+deployment.yaml
+app1/
+  base
+    service.yaml
+    deployment.yaml
+    ingress.yaml
+  kustomization.yaml
+  project.yaml
+  application.yaml
+app2/
+  project.yaml
+  applicationset.yaml
+```
+
+For this you can use the following shell command:
+
+```shell
+argocd app set guestbook --directory-include "{*/project.yaml,*/application*.yaml}" --directory-recurse
+```
+This would be the declarative syntax:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+spec:
+  source:
+    directory:
+      recurse: true
+      include: '{*/project.yaml,*/application*.yaml}'
+```
+
 ### Excluding Certain Files
 
 It is possible to exclude files matching a pattern from directory applications. For example, in a repository containing
